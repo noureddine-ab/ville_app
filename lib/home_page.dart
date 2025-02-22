@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> fetchVilles() async {
-    final response = await http.get(Uri.parse('http://localhost:9090/cities'));
+    final response = await http.get(Uri.parse('http://192.168.1.8:9090/cities'));
     if (response.statusCode == 200) {
       setState(() {
         villes = json.decode(response.body);

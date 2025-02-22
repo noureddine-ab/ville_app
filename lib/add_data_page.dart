@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'end_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class AddDataPage extends StatefulWidget {
   @override
@@ -9,6 +10,19 @@ class AddDataPage extends StatefulWidget {
 class _AddDataPageState extends State<AddDataPage> {
   final _formKey = GlobalKey<FormState>();
   final _villeController = TextEditingController();
+
+  Future<void> addCity(String name) async {
+    final response = await http.post(
+      Uri.parse('http://localhost:8080/cities'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({'name': name}),
+    );
+    if (response.statusCode == 200) {
+      Navigator.pushNamed(context, '/end');
+    } else {
+      throw Exception('Failed to add ville');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +48,7 @@ class _AddDataPageState extends State<AddDataPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Ajouter la logique pour enregistrer la ville
-                    Navigator.pushNamed(context, '/end');
+                    addCity(_villeController.text);
                   }
                 },
                 child: Text('Ajouter'),

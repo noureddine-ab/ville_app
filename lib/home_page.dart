@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'add_data_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   @override
@@ -7,7 +8,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> villes = ["Paris", "Lyon", "Marseille"]; // Exemple de données
+  List<dynamic> villes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchVilles();
+  }
+
+  Future<void> fetchVilles() async {
+    final response = await http.get(Uri.parse('http://localhost:8080/cities'));
+    if (response.statusCode == 200) {
+      setState(() {
+        villes = json.decode(response.body);
+      });
+    } else {
+      throw Exception('Failed to load villes');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +34,7 @@ class _HomePageState extends State<HomePage> {
       body: ListView.builder(
         itemCount: villes.length,
         itemBuilder: (context, index) {
-          return ListTile(title: Text(villes[index]));
+          return ListTile(title: Text(villes[index]['name']));
         },
       ),
       floatingActionButton: FloatingActionButton(

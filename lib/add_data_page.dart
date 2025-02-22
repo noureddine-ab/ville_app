@@ -13,7 +13,7 @@ class _AddDataPageState extends State<AddDataPage> {
 
   Future<void> addCity(String name) async {
     final response = await http.post(
-      Uri.parse('http://localhost:8080/cities'),
+      Uri.parse('http://localhost:9090/cities'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'name': name}),
     );
